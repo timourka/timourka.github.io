@@ -373,7 +373,7 @@ async function main() {
                 if (be[0] != -1){
                     return [el[0], el[1]];
                 }
-                if (countLen(startX, startY, el[0], el[1]) > minLen*minLen){
+                if (await countLen(startX, startY, el[0], el[1]) > minLen){
                     return [-1,-1];
                 }
                 if (await check2(el[0]+1, el[1])){
@@ -406,15 +406,15 @@ async function main() {
                 show_search(x, y);
     
                 if (getBuffer(x, y) == 2) {
-                    show_map();
-                    await sleep(100);
                     img_map[x + y * img_w] = 3;
                     cr_size = 1;
                     let v = [-1,-1];
                     v = await BFS(x, y);
+                    show_map();
+                    await sleep(100);
                     if (v[0]!=-1){
                         let len = await countLen(v[0], v[1], x, y);
-                        if (minLen*minLen >= len){
+                        if (minLen >= len){
                             minX1 = x;
                             minX2 = v[0];
                             minY1 = y;
@@ -476,8 +476,10 @@ async function main() {
     }
 
     async function DFS2(startX, startY, finishX, finishY){
-        if (startX == finishX && startY == finishY)
+        if (startX == finishX && startY == finishY){
+            moveTo(finishX, finishY);
             return true;
+        }
 
         let x_ = startX;
         let y_ = startY;
